@@ -8,7 +8,7 @@ even though their scope is within the function only.
 
 Also,part of the code below might be modified, 
 as they were not moved to this seperate file until much later,
-and parts were copied and pasted from main file 
+and parts were copied and pasted from the main file 
 */
 
 
