@@ -1,5 +1,166 @@
-#cells{
-	display:grid;,
-	grid-template-rows:repeat(9,auto);,
-	grid-template-columns: repeat(9,auto);
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 80%;
 }
+
+* {
+	box-sizing: border-box;
+}
+
+.main-header {
+	position: fixed;
+	width: 100vw;
+	height: 3rem;
+}
+
+.main-header h1 {
+	font-size: 2rem;
+	padding: 0.25rem;
+	background-color: darkblue;
+	color: white;
+	margin: 0;
+	text-align: center;
+}
+
+.section__game-box {
+	display: grid;
+	align-self: center;
+	grid-template-columns: repeat(9, 1.8rem);
+}
+
+.section__game-box input {
+	padding: 0.1rem;
+	height: 1.8rem;
+	text-align: center;
+	border: 0.5px solid grey;
+	font-size: 1.5rem;
+}
+
+.main {
+	padding-top: 4rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.section__game-box [class$="9"] {
+	border-right: 4px solid grey;
+}
+
+.section__game-box [class$="1"] {
+	border-left: 4px solid grey;
+}
+
+.section__game-box [class^="cell9"] {
+	border-bottom: 4px solid grey;
+}
+
+.section__game-box [class^="cell1"] {
+	border-top: 4px solid grey;
+}
+
+.section__game-box [class$="6"],
+.section__game-box [class$="3"] {
+	border-right: 3px solid grey;
+}
+
+.section__game-box [class^="cell6"],
+.section__game-box [class^="cell3"] {
+	border-bottom: 3px solid grey;
+}
+
+.section__game-box input:hover{
+	border:3px green solid;
+	color: green;
+}
+
+.section__game-box input.invalid{
+	border: 3px red solid ;
+	color: red;
+}
+
+
+.input-error{
+	display: none;
+	padding: 1rem;
+	border: 1.5px solid red;
+	color: darkred;
+	border-radius: 4rem;
+	font-size: .8rem;
+	font-weight: bold;
+}
+
+.section__input-buttons {
+	margin-top: 1rem;
+	display: grid;
+	grid-template-columns: repeat(6, 1.8rem);
+	grid-template-rows: repeat(5, 1.8rem);
+	grid-gap: 0.5rem;
+}
+
+.section__input-buttons button {
+	font-weight: bold;
+	padding: 0.1rem;
+	border-radius: 0.9rem;
+}
+
+.input-button {
+	grid-column-end: span 2;
+	color: black;
+	background-color: white;
+	border: 2px solid darkblue;
+}
+
+.input-button:hover {
+	color: white;
+	background-color: darkblue;
+}
+
+.clear-button:hover,
+.reset-button:hover {
+	color: white;
+	background-color: black;
+}
+
+.clear-button,
+.reset-button {
+	grid-column-end: span 3;
+	background-color: white;
+	border: 2px solid black;
+}
+
+.solve-button {
+	grid-column-end: span 6;
+	background-color: darkblue;
+	border: none;
+	color: white;
+}
+
+.solve-button:hover {
+	color: darkblue;
+	background-color: white;
+	border: 2px solid darkblue;
+}
+
+.solve-button[disabled]{
+	color: dimgrey;
+	background-color: grey;
+	border: none;
+}
+
+
+@media (max-width: 250px){
+	html{
+		font-size: 60%;
+	}
+}
+
+
+@media (min-width:450px) {
+	html{
+		font-size: 100%;
+	}
+}
+
