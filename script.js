@@ -1,61 +1,103 @@
 //Javascript Sudoku Solver
-
-
-let board = [
-	[, , , 2, , 3, , ,],
-	[, , , , , 9, , ,],
-	[, , , 6, , 5, , ,],
-	[, , , , , , , ,],
-	[, , , , , , , ,],
-	[, , , , , , , ,],
-	[, , , 5, , 2, , ,],
-	[, , 1, , , , , ,],
-	[, , , 4, , 8, , ,],
-];
-
-board = [
-	[, , 9, , , , , ,],
-	[, 6, , , 1, , , 4],
-	[, , , 5, , 8, , ,],
-	[, , , , , 1, 7, , 2],
-	[, 1, , , , , 8, ,],
-	[, , 4, 2, 9, , , , 3],
-	[4, , , , , , , 3, 9],
-	[9, , , , 4, 3, 1, 8, 7],
-	[, , , , , , , ,],
-];
-
-board = [
-	[, , 9, , , 4, , ,],
-	[, 6, , 9, 1, , , 4],
-	[, 4, , 5, , 8, 9, ,],
-	[, 9, , 4, 8, 1, 7, , 2],
-	[, 1, , , , , 8, 9, 4],
-	[, , 4, 2, 9, , , 1, 3],
-	[4, , , , , , , 3, 9],
-	[9, , , 6, 4, 3, 1, 8, 7],
-	[, , , , , 9, 4, ,],
-];
-
-for (let i = 0; i < 9; i++) {
-	for (let j = 0; j < 9; j++) {
-		if (board[i][j] == null || board[i][j] == undefined) {
-			board[i][j] = 0;
-		}
-	}
-}
-
 const createBoard = () => {
 	let CBboard = [];
 	let row = [];
 	for (let i = 0; i < 9; i++) {
-		row.push("");
+		row.push(0);
 	}
 	for (let i = 0; i < 9; i++) {
 		CBboard.push(row);
 	}
 	return CBboard;
 };
+
+const boardChanger = (BCid , BCreturn) =>{
+	//Side Effect
+	coordinate = BCid.split('')	
+	board[coordinate[1]-1][coordinate[2]-1] = BCreturn[1]
+}
+
+
+
+const abraham = (e) =>{
+	let a = []
+	const elijah = (e)=>{
+		console.log(a)
+		console.log(e.target.id)
+		a.push(e.target.id)
+		console.log(a)
+	}
+	elijah(e)
+}
+
+
+const inputHandler = (e) => {
+	let errorId = []
+	let errorMessage=[]
+	IHid = e.target.id
+	IHvalue = e.target.value
+	let theClass= e.target.classList[0]	
+
+	console.log(theClass)
+	const verification = (Vvalue) => {
+		let trimmedValue = Vvalue.trim()
+		if (isNaN(trimmedValue)){
+			return ([false, "Value must be a number"])
+		}
+
+		else if (trimmedValue===""){
+			return([true, ""])
+		}
+
+		else if (!Number.isInteger(Number(trimmedValue))){
+			return([false, "Value must be a whole Number"])
+		}
+
+		else if (Number(trimmedValue)>=1 && Number(trimmedValue) <= 9){
+			return ([true,Number(trimmedValue)])
+		}
+
+		else return([false, "Value must be between 1 - 9"])
+	}
+
+
+	const validInput = (VIid , VIreturn,e) => {
+		errorId.push(e.target.id)
+		if (Boolean(VIreturn[1])){
+		(Array.from(e.target.classList).includes('invalid')) ? e.target.classList.remove('invalid', e.target.classList[0]):null;
+		e.target.classList.add(theClass)
+		//(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? null:document.querySelector(".error-message").classList.add('hide-error-message');
+		// (document.querySelector("#solve").getAttribute('disabled'))? null: document.querySelector("#solve").setAttribute('disabled','');
+
+			document.querySelector('#'+VIid).value= VIreturn[1]
+			boardChanger(VIid, VIreturn)
+			console.log(board)
+		}
+	}
+
+	const invalidInput = (e,IIvalue) =>{
+		errorId.push(e.target.id)
+		(Array.from(e.target.classList).includes('invalid')) ? null : e.target.classList.add('invalid', e.target.classList[0]);
+		(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? document.querySelector(".error-message").textContent = IIvalue[1]:null;
+		(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? document.querySelector(".error-message").classList.remove('hide-error-message'):null;
+		(document.querySelector("#solve").getAttribute('disabled'))? null: document.querySelector("#solve").setAttribute('disabled','');
+		console.log(errorId)
+	}
+
+	verification(IHvalue)[0]? validInput(IHid,verification(IHvalue),e):invalidInput(e,verification(IHvalue));
+}
+
+
+
+let board = JSON.parse(JSON.stringify(createBoard()))
+const cells = Array.from(document.querySelectorAll('[class^="cell"]'))
+cells.map((e)=>e.addEventListener("input", inputHandler))
+
+
+
+
+
+// Solving the board
 
 const receiveInput = (RIboard) => {
 	for (let i = 0; i < 9; i++) {
@@ -613,11 +655,16 @@ const solver = (SObject, Stratergies) => {
 
 	return doneBoard_new;
 };
-let gameObject = makeGameObject(board);
-let solvedGameObject = solver(gameObject, [
-	strategyScanning,
-	stratergyExclusiveCells,
-	advancedScanning,
-]);
-displayBoard(boardate(solvedGameObject));
-console.log(solvedGameObject);
+
+
+
+// let gameObject = makeGameObject(board);
+// let solvedGameObject = solver(gameObject, [
+// 	strategyScanning,
+// 	stratergyExclusiveCells,
+// 	advancedScanning,
+// ]);
+
+
+// displayBoard(boardate(solvedGameObject));
+// console.log(solvedGameObject);
