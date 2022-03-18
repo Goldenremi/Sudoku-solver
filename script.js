@@ -1,4 +1,8 @@
 //Javascript Sudoku Solver
+let errorId = [];
+let errorValue = [];
+let cellClicks = {};
+
 const createBoard = () => {
 	let CBboard = [];
 	let row = [];
@@ -11,91 +15,137 @@ const createBoard = () => {
 	return CBboard;
 };
 
-const boardChanger = (BCid , BCreturn) =>{
-	//Side Effect
-	coordinate = BCid.split('')	
-	board[coordinate[1]-1][coordinate[2]-1] = BCreturn[1]
-}
-
-
-
-const abraham = (e) =>{
-	let a = []
-	const elijah = (e)=>{
-		console.log(a)
-		console.log(e.target.id)
-		a.push(e.target.id)
-		console.log(a)
-	}
-	elijah(e)
-}
-
-
 const inputHandler = (e) => {
-	let errorId = []
-	let errorMessage=[]
-	IHid = e.target.id
-	IHvalue = e.target.value
-	let theClass= e.target.classList[0]	
-
-	console.log(theClass)
+	IHid = e.target.id;
+	IHvalue = e.target.value;
+	let theClass = e.target.classList[0];
 	const verification = (Vvalue) => {
-		let trimmedValue = Vvalue.trim()
-		if (isNaN(trimmedValue)){
-			return ([false, "Value must be a number"])
+		let trimmedValue = Vvalue.trim();
+		if (isNaN(trimmedValue)) {
+			return [false, "Value must be a number"];
+		} else if (trimmedValue === "") {
+			return [true, ""];
+		} else if (!Number.isInteger(Number(trimmedValue))) {
+			return [false, "Value must be a whole Number"];
+		} else if (Number(trimmedValue) >= 1 && Number(trimmedValue) <= 9) {
+			return [true, Number(trimmedValue)];
+		} else return [false, "Value must be between 1 - 9"];
+	};
+
+	const validInput = (VIid, VIreturn, e) => {
+		let popIndexTwo = errorId.indexOf(e.target.id);
+		if (popIndexTwo !== -1) {
+			errorId.splice(popIndexTwo, 1);
+			errorValue.splice(popIndexTwo, 1);
 		}
 
-		else if (trimmedValue===""){
-			return([true, ""])
+		if (Array.from(e.target.classList).includes("invalid")) {
+			e.target.classList.remove("invalid", theClass);
+			e.target.classList.add(theClass);
 		}
 
-		else if (!Number.isInteger(Number(trimmedValue))){
-			return([false, "Value must be a whole Number"])
+		if (!errorId.length) {
+			if (
+				!Array.from(
+					document.querySelector(".error-message").classList
+				).includes("hide-error-message")
+			) {
+				document
+					.querySelector(".error-message")
+					.classList.add("hide-error-message");
+			}
+
+			if (!document.querySelector("#solve").getAttribute("disabled")) {
+				document.querySelector("#solve").disabled = false;
+			} else {
+				document.querySelector(".error-message").textContent =
+					errorValue[-1];
+			}
 		}
 
-		else if (Number(trimmedValue)>=1 && Number(trimmedValue) <= 9){
-			return ([true,Number(trimmedValue)])
+		document.querySelector("#" + VIid).value = VIreturn[1];
+	};
+
+	const invalidInput = (e, IIvalue) => {
+		if (errorId.includes(e.target.id)) {
+			let popIndex = errorId.indexOf(e.target.id);
+
+			errorId.splice(popIndex, 1);
+			errorValue.splice(popIndex, 1);
+		}
+		errorId.push(e.target.id);
+		errorValue.push(IIvalue[1]);
+
+		if (document.querySelector(".error-message").dataset.show) {
+			document.querySelector(".error-message").textContent = IIvalue[1];
 		}
 
-		else return([false, "Value must be between 1 - 9"])
+		if (!Array.from(e.target.classList).includes("invalid")) {
+			e.target.classList.add("invalid", theClass);
+		}
+		if (
+			Array.from(
+				document.querySelector(".error-message").classList
+			).includes("hide-error-message")
+		) {
+			document.querySelector(".error-message").textContent = IIvalue[1];
+			document
+				.querySelector(".error-message")
+				.classList.remove("hide-error-message");
+		}
+
+		if (!document.querySelector("#solve").getAttribute("disabled")) {
+			document.querySelector("#solve").setAttribute("disabled", "");
+		}
+	};
+
+	verification(IHvalue)[0]
+		? validInput(IHid, verification(IHvalue), e)
+		: invalidInput(e, verification(IHvalue));
+};
+
+const newestCellHandler = (e) => {
+	now = new Date();
+	cellClicks[now.getSeconds()] = e.target.id;
+	console.log(cellClicks);
+};
+
+const buttonsHandler = (e) => {
+	if (e.target.textContent === "Clear") {
+		document.querySelector(
+			"#" +
+				cellClicks[
+					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
+				]
+		).value = "";
+	} else if (e.target.textContent === "Reset") {
+		cells.map((e) => (e.value = ""));
+	} else if (e.target.textContent === "Solve") {
+		const copyData = () => {
+			cells.map((e) => {
+				coordinate = e.id.split("");
+				if (e.value) {
+					board[coordinate[1] - 1][coordinate[2] - 1] = e.value;
+				} else board[coordinate[1] - 1][coordinate[2] - 1] = 0;
+			});
+		};
+	} else {
+		document.querySelector(
+			"#" +
+				cellClicks[
+					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
+				]
+		).value = e.target.textContent;
 	}
+};
 
+let board = JSON.parse(JSON.stringify(createBoard()));
+const cells = Array.from(document.querySelectorAll('[class^="cell"]'));
+cells.map((e) => e.addEventListener("input", inputHandler));
+cells.map((e) => e.addEventListener("click", newestCellHandler));
 
-	const validInput = (VIid , VIreturn,e) => {
-		errorId.push(e.target.id)
-		if (Boolean(VIreturn[1])){
-		(Array.from(e.target.classList).includes('invalid')) ? e.target.classList.remove('invalid', e.target.classList[0]):null;
-		e.target.classList.add(theClass)
-		//(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? null:document.querySelector(".error-message").classList.add('hide-error-message');
-		// (document.querySelector("#solve").getAttribute('disabled'))? null: document.querySelector("#solve").setAttribute('disabled','');
-
-			document.querySelector('#'+VIid).value= VIreturn[1]
-			boardChanger(VIid, VIreturn)
-			console.log(board)
-		}
-	}
-
-	const invalidInput = (e,IIvalue) =>{
-		errorId.push(e.target.id)
-		(Array.from(e.target.classList).includes('invalid')) ? null : e.target.classList.add('invalid', e.target.classList[0]);
-		(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? document.querySelector(".error-message").textContent = IIvalue[1]:null;
-		(Array.from(document.querySelector(".error-message").classList).includes('hide-error-message'))? document.querySelector(".error-message").classList.remove('hide-error-message'):null;
-		(document.querySelector("#solve").getAttribute('disabled'))? null: document.querySelector("#solve").setAttribute('disabled','');
-		console.log(errorId)
-	}
-
-	verification(IHvalue)[0]? validInput(IHid,verification(IHvalue),e):invalidInput(e,verification(IHvalue));
-}
-
-
-
-let board = JSON.parse(JSON.stringify(createBoard()))
-const cells = Array.from(document.querySelectorAll('[class^="cell"]'))
-cells.map((e)=>e.addEventListener("input", inputHandler))
-
-
-
-
+const buttons = Array.from(document.querySelectorAll('[class$="button"]'));
+buttons.map((e) => e.addEventListener("click", buttonsHandler));
 
 // Solving the board
 
@@ -327,7 +377,6 @@ const makeGameObject = (MGOboard) => {
 	}
 	return gameObject;
 };
-
 
 const strategyScanning = (SSGameObject) => {
 	SSGameObject = JSON.parse(JSON.stringify(SSGameObject));
@@ -656,15 +705,12 @@ const solver = (SObject, Stratergies) => {
 	return doneBoard_new;
 };
 
-
-
 // let gameObject = makeGameObject(board);
 // let solvedGameObject = solver(gameObject, [
 // 	strategyScanning,
 // 	stratergyExclusiveCells,
 // 	advancedScanning,
 // ]);
-
 
 // displayBoard(boardate(solvedGameObject));
 // console.log(solvedGameObject);

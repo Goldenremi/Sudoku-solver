@@ -76,6 +76,12 @@ body {
 	color: green;
 }
 
+.section__game-box input:focus-visible{
+	outline-color:green;
+	color: green;
+}
+
+
 .section__game-box input.invalid,
 .section__game-box input.invalid:focus-visible{
 	border: 3px red solid ;
