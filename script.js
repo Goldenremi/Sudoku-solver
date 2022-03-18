@@ -1,151 +1,4 @@
 //Javascript Sudoku Solver
-let errorId = [];
-let errorValue = [];
-let cellClicks = {};
-
-const createBoard = () => {
-	let CBboard = [];
-	let row = [];
-	for (let i = 0; i < 9; i++) {
-		row.push(0);
-	}
-	for (let i = 0; i < 9; i++) {
-		CBboard.push(row);
-	}
-	return CBboard;
-};
-
-const inputHandler = (e) => {
-	IHid = e.target.id;
-	IHvalue = e.target.value;
-	let theClass = e.target.classList[0];
-	const verification = (Vvalue) => {
-		let trimmedValue = Vvalue.trim();
-		if (isNaN(trimmedValue)) {
-			return [false, "Value must be a number"];
-		} else if (trimmedValue === "") {
-			return [true, ""];
-		} else if (!Number.isInteger(Number(trimmedValue))) {
-			return [false, "Value must be a whole Number"];
-		} else if (Number(trimmedValue) >= 1 && Number(trimmedValue) <= 9) {
-			return [true, Number(trimmedValue)];
-		} else return [false, "Value must be between 1 - 9"];
-	};
-
-	const validInput = (VIid, VIreturn, e) => {
-		let popIndexTwo = errorId.indexOf(e.target.id);
-		if (popIndexTwo !== -1) {
-			errorId.splice(popIndexTwo, 1);
-			errorValue.splice(popIndexTwo, 1);
-		}
-
-		if (Array.from(e.target.classList).includes("invalid")) {
-			e.target.classList.remove("invalid", theClass);
-			e.target.classList.add(theClass);
-		}
-
-		if (!errorId.length) {
-			if (
-				!Array.from(
-					document.querySelector(".error-message").classList
-				).includes("hide-error-message")
-			) {
-				document
-					.querySelector(".error-message")
-					.classList.add("hide-error-message");
-			}
-
-			if (!document.querySelector("#solve").getAttribute("disabled")) {
-				document.querySelector("#solve").disabled = false;
-			} else {
-				document.querySelector(".error-message").textContent =
-					errorValue[-1];
-			}
-		}
-
-		document.querySelector("#" + VIid).value = VIreturn[1];
-	};
-
-	const invalidInput = (e, IIvalue) => {
-		if (errorId.includes(e.target.id)) {
-			let popIndex = errorId.indexOf(e.target.id);
-
-			errorId.splice(popIndex, 1);
-			errorValue.splice(popIndex, 1);
-		}
-		errorId.push(e.target.id);
-		errorValue.push(IIvalue[1]);
-
-		if (document.querySelector(".error-message").dataset.show) {
-			document.querySelector(".error-message").textContent = IIvalue[1];
-		}
-
-		if (!Array.from(e.target.classList).includes("invalid")) {
-			e.target.classList.add("invalid", theClass);
-		}
-		if (
-			Array.from(
-				document.querySelector(".error-message").classList
-			).includes("hide-error-message")
-		) {
-			document.querySelector(".error-message").textContent = IIvalue[1];
-			document
-				.querySelector(".error-message")
-				.classList.remove("hide-error-message");
-		}
-
-		if (!document.querySelector("#solve").getAttribute("disabled")) {
-			document.querySelector("#solve").setAttribute("disabled", "");
-		}
-	};
-
-	verification(IHvalue)[0]
-		? validInput(IHid, verification(IHvalue), e)
-		: invalidInput(e, verification(IHvalue));
-};
-
-const newestCellHandler = (e) => {
-	now = new Date();
-	cellClicks[now.getSeconds()] = e.target.id;
-	console.log(cellClicks);
-};
-
-const buttonsHandler = (e) => {
-	if (e.target.textContent === "Clear") {
-		document.querySelector(
-			"#" +
-				cellClicks[
-					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
-				]
-		).value = "";
-	} else if (e.target.textContent === "Reset") {
-		cells.map((e) => (e.value = ""));
-	} else if (e.target.textContent === "Solve") {
-		const copyData = () => {
-			cells.map((e) => {
-				coordinate = e.id.split("");
-				if (e.value) {
-					board[coordinate[1] - 1][coordinate[2] - 1] = e.value;
-				} else board[coordinate[1] - 1][coordinate[2] - 1] = 0;
-			});
-		};
-	} else {
-		document.querySelector(
-			"#" +
-				cellClicks[
-					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
-				]
-		).value = e.target.textContent;
-	}
-};
-
-let board = JSON.parse(JSON.stringify(createBoard()));
-const cells = Array.from(document.querySelectorAll('[class^="cell"]'));
-cells.map((e) => e.addEventListener("input", inputHandler));
-cells.map((e) => e.addEventListener("click", newestCellHandler));
-
-const buttons = Array.from(document.querySelectorAll('[class$="button"]'));
-buttons.map((e) => e.addEventListener("click", buttonsHandler));
 
 // Solving the board
 
@@ -187,19 +40,19 @@ const boardate = (BboardObject) => {
 	return board;
 };
 
-const displayBoard = (DBboard) => {
-	for (let i = 0; i < 9; i++) {
-		string = " ";
-		for (let j = 0; j < 9; j++) {
-			if (DBboard[i][j] === 0) {
-				string = string + "- ";
-			} else {
-				string = string + DBboard[i][j].toString() + " ";
-			}
-		}
-		console.log(string);
-	}
-};
+// const displayBoard = (DBboard) => {
+// 	for (let i = 0; i < 9; i++) {
+// 		string = " ";
+// 		for (let j = 0; j < 9; j++) {
+// 			if (DBboard[i][j] === 0) {
+// 				string = string + "- ";
+// 			} else {
+// 				string = string + DBboard[i][j].toString() + " ";
+// 			}
+// 		}
+// 		console.log(string);
+// 	}
+// };
 
 const makeGameObject = (MGOboard) => {
 	let gameObject = {
@@ -686,6 +539,7 @@ const updater = (UMode, UObject, UId, UValue, UArray) => {
 };
 
 const solver = (SObject, Stratergies) => {
+
 	let doneBoard_old;
 	let doneBoard_new = {};
 	let i = 0;
@@ -705,12 +559,178 @@ const solver = (SObject, Stratergies) => {
 	return doneBoard_new;
 };
 
-// let gameObject = makeGameObject(board);
-// let solvedGameObject = solver(gameObject, [
-// 	strategyScanning,
-// 	stratergyExclusiveCells,
-// 	advancedScanning,
-// ]);
+const displaySolution = () =>{
+			DSboard = JSON.parse(JSON.stringify(solvedGameObject))
+			for(let i = 0;i<81;i++){
+				console.log(DSboard.cells[i].value)
+				if (DSboard.cells[i].value) {
+					id = '#c' + DSboard .cells[i].id
+					console.log(id)
+					console.log(document.querySelector(id))
+					document.querySelector(id).value = DSboard.cells[i].value			
+						}
+			};
+}
 
-// displayBoard(boardate(solvedGameObject));
-// console.log(solvedGameObject);
+const inputHandler = (e) => {
+	IHid = e.target.id;
+	IHvalue = e.target.value;
+	let theClass = e.target.classList[0];
+	const verification = (Vvalue) => {
+		let trimmedValue = Vvalue.trim();
+		if (isNaN(trimmedValue)) {
+			return [false, "Value must be a number"];
+		} else if (trimmedValue === "") {
+			return [true, ""];
+		} else if (!Number.isInteger(Number(trimmedValue))) {
+			return [false, "Value must be a whole Number"];
+		} else if (Number(trimmedValue) >= 1 && Number(trimmedValue) <= 9) {
+			return [true, Number(trimmedValue)];
+		} else return [false, "Value must be between 1 - 9"];
+	};
+
+	const validInput = (VIid, VIreturn, e) => {
+		let popIndexTwo = errorId.indexOf(e.target.id);
+		if (popIndexTwo !== -1) {
+			errorId.splice(popIndexTwo, 1);
+			errorValue.splice(popIndexTwo, 1);
+		}
+
+		if (Array.from(e.target.classList).includes("invalid")) {
+			e.target.classList.remove("invalid", theClass);
+			e.target.classList.add(theClass);
+		}
+
+		if (!errorId.length) {
+			if (
+				!Array.from(
+					document.querySelector(".error-message").classList
+				).includes("hide-error-message")
+			) {
+				document
+					.querySelector(".error-message")
+					.classList.add("hide-error-message");
+			}
+
+			if (!document.querySelector("#solve").getAttribute("disabled")) {
+				document.querySelector("#solve").disabled = false;
+			} else {
+				document.querySelector(".error-message").textContent =
+					errorValue[-1];
+			}
+		}
+
+		document.querySelector("#" + VIid).value = VIreturn[1];
+	};
+
+	const invalidInput = (e, IIvalue) => {
+		if (errorId.includes(e.target.id)) {
+			let popIndex = errorId.indexOf(e.target.id);
+
+			errorId.splice(popIndex, 1);
+			errorValue.splice(popIndex, 1);
+		}
+		errorId.push(e.target.id);
+		errorValue.push(IIvalue[1]);
+
+		if (document.querySelector(".error-message").dataset.show) {
+			document.querySelector(".error-message").textContent = IIvalue[1];
+		}
+
+		if (!Array.from(e.target.classList).includes("invalid")) {
+			e.target.classList.add("invalid", theClass);
+		}
+		if (
+			Array.from(
+				document.querySelector(".error-message").classList
+			).includes("hide-error-message")
+		) {
+			document.querySelector(".error-message").textContent = IIvalue[1];
+			document
+				.querySelector(".error-message")
+				.classList.remove("hide-error-message");
+		}
+
+		if (!document.querySelector("#solve").getAttribute("disabled")) {
+			document.querySelector("#solve").setAttribute("disabled", "");
+		}
+	};
+
+	verification(IHvalue)[0]
+		? validInput(IHid, verification(IHvalue), e)
+		: invalidInput(e, verification(IHvalue));
+};
+
+const newestCellHandler = (e) => {
+	now = new Date();
+	cellClicks[now.getTime()] = e.target.id;
+	console.log(cellClicks);
+};
+
+const buttonsHandler = (e) => {
+	if (e.target.textContent === "Clear") {
+		document.querySelector(
+			"#" +
+				cellClicks[
+					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
+				]
+		).value = "";
+	} else if (e.target.textContent === "Reset") {
+		cells.map((e) => (e.value = ""));
+	} else if (e.target.textContent === "Solve") {
+			const createBoard = () => {
+				let CBboard = [];
+				let row = [];
+				for (let i = 0; i < 9; i++) {
+					row.push(0);
+				}
+				for (let i = 0; i < 9; i++) {
+					CBboard.push(row);
+				}
+				return CBboard;
+			};
+
+		const copyData = (CDboard) => {
+			CDboard = JSON.parse(JSON.stringify(CDboard))
+			cells.map((e) => {
+				coordinate = e.id.split("");
+				if (e.value) {
+					CDboard[coordinate[1] - 1][coordinate[2] - 1] = Number(
+						e.value
+					);
+				} else CDboard[coordinate[1] - 1][coordinate[2] - 1] = 0;
+			});
+			return CDboard
+		};
+
+		gameObject = JSON.parse(JSON.stringify(makeGameObject(copyData(createBoard()))));
+	solvedGameObject = solver(gameObject, [
+	strategyScanning,
+	stratergyExclusiveCells,
+	advancedScanning,
+]);
+displaySolution()
+
+	} else {
+		document.querySelector(
+			"#" +
+				cellClicks[
+					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
+				]
+		).value = e.target.textContent;
+	}
+};
+
+
+let errorId = [];
+let errorValue = [];
+let cellClicks = {};
+let gameObject = {}
+let solvedGameObject
+const cells = Array.from(document.querySelectorAll('[class^="cell"]'));
+cells.map((e) => e.addEventListener("input", inputHandler));
+cells.map((e) => e.addEventListener("click", newestCellHandler));
+
+const buttons = Array.from(document.querySelectorAll('[class$="button"]'));
+buttons.map((e) => e.addEventListener("click", buttonsHandler));
+
