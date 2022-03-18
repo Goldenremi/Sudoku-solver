@@ -562,11 +562,10 @@ const solver = (SObject, Stratergies) => {
 const displaySolution = () =>{
 			DSboard = JSON.parse(JSON.stringify(solvedGameObject))
 			for(let i = 0;i<81;i++){
-				console.log(DSboard.cells[i].value)
+			
 				if (DSboard.cells[i].value) {
 					id = '#c' + DSboard .cells[i].id
-					console.log(id)
-					console.log(document.querySelector(id))
+				
 					document.querySelector(id).value = DSboard.cells[i].value			
 						}
 			};
@@ -664,7 +663,7 @@ const inputHandler = (e) => {
 const newestCellHandler = (e) => {
 	now = new Date();
 	cellClicks[now.getTime()] = e.target.id;
-	console.log(cellClicks);
+	
 };
 
 const buttonsHandler = (e) => {
