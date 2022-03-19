@@ -41,18 +41,17 @@
 // 	}
 // };
 
-			const createBoard = () => {
-			let CBboard = [];
-			let row = [];
-			for (let i = 0; i < 9; i++) {
-				row.push(0);
-			}
-			for (let i = 0; i < 9; i++) {
-				CBboard.push(row);
-			}
-			return CBboard;
-		};
-
+const createBoard = () => {
+	let CBboard = [];
+	let row = [];
+	for (let i = 0; i < 9; i++) {
+		row.push(0);
+	}
+	for (let i = 0; i < 9; i++) {
+		CBboard.push(row);
+	}
+	return CBboard;
+};
 
 const boardate = (BboardObject) => {
 	board = [];
@@ -66,7 +65,6 @@ const boardate = (BboardObject) => {
 	}
 	return board;
 };
-
 
 const makeGameObject = (MGOboard) => {
 	let gameObject = {
@@ -245,19 +243,16 @@ const makeGameObject = (MGOboard) => {
 	return gameObject;
 };
 
-		const copyData = (CDgameBoard) => {
-			CDgameBoard = JSON.parse(JSON.stringify(CDgameBoard));
-			cells.map((e) => {
-				coordinate = e.id.split("");
-				if (e.value) {
-					CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = Number(
-						e.value
-					);
-				} else CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = 0;
-			});
-			return CDgameBoard;
-		};
-
+const copyData = (CDgameBoard) => {
+	CDgameBoard = JSON.parse(JSON.stringify(CDgameBoard));
+	cells.map((e) => {
+		coordinate = e.id.split("");
+		if (e.value) {
+			CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = Number(e.value);
+		} else CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = 0;
+	});
+	return CDgameBoard;
+};
 
 const strategyScanning = (SSGameObject) => {
 	SSGameObject = JSON.parse(JSON.stringify(SSGameObject));
@@ -597,11 +592,14 @@ const displaySolution = () => {
 	}
 
 	if (
-		boardate(DSgameObject).reduce((acc, e) => e.includes(0) || acc, false)
-		 && boardate(DSgameObject).reduce((acc,e ) => {
-			let isNotZero = e.filter((e) => e!==0)
-			return (Boolean(isNotZero.length) ||acc)
-		},false)
+		boardate(DSgameObject).reduce(
+			(acc, e) => e.includes(0) || acc,
+			false
+		) &&
+		boardate(DSgameObject).reduce((acc, e) => {
+			let isNotZero = e.filter((e) => e !== 0);
+			return Boolean(isNotZero.length) || acc;
+		}, false)
 	) {
 		// console.log(Array.from(document.querySelectorAll('.error-message').classList))
 		if (
@@ -621,7 +619,6 @@ const inputHandler = (e) => {
 	IHvalue = e.target.value;
 	let theClass = e.target.classList[0];
 
-
 	if (
 		!Array.from(
 			document.querySelectorAll(".error-message")[1].classList
@@ -632,12 +629,12 @@ const inputHandler = (e) => {
 			.classList.add("hide-cannot-solve");
 	}
 	const verification = (Vvalue) => {
-			// console.log(makeGameObject(copyData(createBoard())))
-			//ateempt to make 1&1 in same row throw error
-			// let errorObject = JSON.parse(JSON.stringify(copyData(createBoard)))	
+		// console.log(makeGameObject(copyData(createBoard())))
+		//ateempt to make 1&1 in same row throw error
+		// let errorObject = JSON.parse(JSON.stringify(copyData(createBoard)))
 		let trimmedValue = Vvalue.trim();
-		if(false){}
-		else if (isNaN(trimmedValue)) {
+		if (false) {
+		} else if (isNaN(trimmedValue)) {
 			return [false, "Value must be a number"];
 		} else if (trimmedValue === "") {
 			return [true, ""];
@@ -726,6 +723,15 @@ const newestCellHandler = (e) => {
 };
 
 const buttonsHandler = (e) => {
+	if (
+		!Array.from(
+			document.querySelectorAll(".error-message")[1].classList
+		).includes("hide-cannot-solve")
+	) {
+		document
+			.querySelectorAll(".error-message")[1]
+			.classList.add("hide-cannot-solve");
+	}
 	if (e.target.textContent === "Clear") {
 		document.querySelector(
 			"#" +
@@ -739,7 +745,6 @@ const buttonsHandler = (e) => {
 	} else if (e.target.textContent === "Reset") {
 		cells.map((e) => (e.value = ""));
 	} else if (e.target.textContent === "Solve") {
-
 		gameObject = JSON.parse(
 			JSON.stringify(makeGameObject(copyData(createBoard())))
 		);
@@ -759,7 +764,6 @@ const buttonsHandler = (e) => {
 		).value = e.target.textContent;
 	}
 };
-
 
 let errorId = [];
 let errorValue = [];
