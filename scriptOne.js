@@ -11,7 +11,7 @@ as they were not moved to this seperate file until much later,
 and parts were copied and pasted from the main file 
 */
 
-
+/*
 //Creation of the empty board, a 9 by 9 array of empty strings
 const createBoard = () => {
 	let CBboard = [];
@@ -158,10 +158,11 @@ function runner(solution,Rrows,Rcolumns,Rboxes,RboardArray){
 	return RboardArray
 }
 
-boardArray = dictionate(board)
-let [rows,columns] = representation(boardArray)
-let boxes = makeBoxes(boardArray)
-displayBoard(boardate(boardArray))
-boardArray = runner(solutionScanning, rows, columns, boxes, boardArray)
-displayBoard(boardate(boardArray))
+// boardArray = dictionate(board)
+// let [rows,columns] = representation(boardArray)
+// let boxes = makeBoxes(boardArray)
+// displayBoard(boardate(boardArray))
+// boardArray = runner(solutionScanning, rows, columns, boxes, boardArray)
+// displayBoard(boardate(boardArray))
 
+*/

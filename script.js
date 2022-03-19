@@ -2,43 +2,30 @@
 
 // Solving the board
 
-const receiveInput = (RIboard) => {
-	for (let i = 0; i < 9; i++) {
-		let notCorrectLenght = true;
-		do {
-			data = prompt(
-				"Input data for row " + (i + 1) + " seperated by comma's"
-			);
-			data = data.split(",");
-			if (data.length === 9) {
-				notCorrectLenght = false;
-			}
-		} while (notCorrectLenght);
-	}
+// const receiveInput = (RIboard) => {
+// 	for (let i = 0; i < 9; i++) {
+// 		let notCorrectLenght = true;
+// 		do {
+// 			data = prompt(
+// 				"Input data for row " + (i + 1) + " seperated by comma's"
+// 			);
+// 			data = data.split(",");
+// 			if (data.length === 9) {
+// 				notCorrectLenght = false;
+// 			}
+// 		} while (notCorrectLenght);
+// 	}
 
-	RIboard[i] = data;
-	for (i = 0; i < 9; i++) {
-		for (j = 0; j < 9; j++) {
-			if (RIboard[i][j] === "") {
-				RIboard[i][j] = 0;
-			}
-		}
-	}
-	return RIboard;
-};
-
-const boardate = (BboardObject) => {
-	board = [];
-	for (i = 0; i < 9; i++) {
-		row = [];
-		board.push(row);
-	}
-
-	for (j = 0; j < 81; j++) {
-		board[BboardObject.cells[j].row].push(BboardObject.cells[j].value);
-	}
-	return board;
-};
+// 	RIboard[i] = data;
+// 	for (i = 0; i < 9; i++) {
+// 		for (j = 0; j < 9; j++) {
+// 			if (RIboard[i][j] === "") {
+// 				RIboard[i][j] = 0;
+// 			}
+// 		}
+// 	}
+// 	return RIboard;
+// };
 
 // const displayBoard = (DBboard) => {
 // 	for (let i = 0; i < 9; i++) {
@@ -53,6 +40,33 @@ const boardate = (BboardObject) => {
 // 		console.log(string);
 // 	}
 // };
+
+			const createBoard = () => {
+			let CBboard = [];
+			let row = [];
+			for (let i = 0; i < 9; i++) {
+				row.push(0);
+			}
+			for (let i = 0; i < 9; i++) {
+				CBboard.push(row);
+			}
+			return CBboard;
+		};
+
+
+const boardate = (BboardObject) => {
+	board = [];
+	for (i = 0; i < 9; i++) {
+		row = [];
+		board.push(row);
+	}
+
+	for (j = 0; j < 81; j++) {
+		board[BboardObject.cells[j].row].push(BboardObject.cells[j].value);
+	}
+	return board;
+};
+
 
 const makeGameObject = (MGOboard) => {
 	let gameObject = {
@@ -230,6 +244,20 @@ const makeGameObject = (MGOboard) => {
 	}
 	return gameObject;
 };
+
+		const copyData = (CDgameBoard) => {
+			CDgameBoard = JSON.parse(JSON.stringify(CDgameBoard));
+			cells.map((e) => {
+				coordinate = e.id.split("");
+				if (e.value) {
+					CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = Number(
+						e.value
+					);
+				} else CDgameBoard[coordinate[1] - 1][coordinate[2] - 1] = 0;
+			});
+			return CDgameBoard;
+		};
+
 
 const strategyScanning = (SSGameObject) => {
 	SSGameObject = JSON.parse(JSON.stringify(SSGameObject));
@@ -539,12 +567,11 @@ const updater = (UMode, UObject, UId, UValue, UArray) => {
 };
 
 const solver = (SObject, Stratergies) => {
-
 	let doneBoard_old;
 	let doneBoard_new = {};
 	let i = 0;
 	do {
-		console.log("solving ", i);
+		//console.log("solving ", i);
 		i++;
 		doneBoard_old = JSON.parse(JSON.stringify(doneBoard_new));
 		doneBoard_new = SObject = Stratergies.reduce(
@@ -559,25 +586,58 @@ const solver = (SObject, Stratergies) => {
 	return doneBoard_new;
 };
 
-const displaySolution = () =>{
-			DSboard = JSON.parse(JSON.stringify(solvedGameObject))
-			for(let i = 0;i<81;i++){
-			
-				if (DSboard.cells[i].value) {
-					id = '#c' + DSboard .cells[i].id
-				
-					document.querySelector(id).value = DSboard.cells[i].value			
-						}
-			};
-}
+const displaySolution = () => {
+	DSgameObject = JSON.parse(JSON.stringify(solvedGameObject));
+	for (let i = 0; i < 81; i++) {
+		if (DSgameObject.cells[i].value) {
+			id = "#c" + DSgameObject.cells[i].id;
+
+			document.querySelector(id).value = DSgameObject.cells[i].value;
+		}
+	}
+
+	if (
+		boardate(DSgameObject).reduce((acc, e) => e.includes(0) || acc, false)
+		 && boardate(DSgameObject).reduce((acc,e ) => {
+			let isNotZero = e.filter((e) => e!==0)
+			return (Boolean(isNotZero.length) ||acc)
+		},false)
+	) {
+		// console.log(Array.from(document.querySelectorAll('.error-message').classList))
+		if (
+			Array.from(
+				document.querySelectorAll(".error-message")[1].classList
+			).includes("hide-cannot-solve")
+		) {
+			document
+				.querySelectorAll(".error-message")[1]
+				.classList.remove("hide-cannot-solve");
+		}
+	}
+};
 
 const inputHandler = (e) => {
 	IHid = e.target.id;
 	IHvalue = e.target.value;
 	let theClass = e.target.classList[0];
+
+
+	if (
+		!Array.from(
+			document.querySelectorAll(".error-message")[1].classList
+		).includes("hide-cannot-solve")
+	) {
+		document
+			.querySelectorAll(".error-message")[1]
+			.classList.add("hide-cannot-solve");
+	}
 	const verification = (Vvalue) => {
+			// console.log(makeGameObject(copyData(createBoard())))
+			//ateempt to make 1&1 in same row throw error
+			// let errorObject = JSON.parse(JSON.stringify(copyData(createBoard)))	
 		let trimmedValue = Vvalue.trim();
-		if (isNaN(trimmedValue)) {
+		if(false){}
+		else if (isNaN(trimmedValue)) {
 			return [false, "Value must be a number"];
 		} else if (trimmedValue === "") {
 			return [true, ""];
@@ -663,7 +723,6 @@ const inputHandler = (e) => {
 const newestCellHandler = (e) => {
 	now = new Date();
 	cellClicks[now.getTime()] = e.target.id;
-	
 };
 
 const buttonsHandler = (e) => {
@@ -674,42 +733,23 @@ const buttonsHandler = (e) => {
 					Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
 				]
 		).value = "";
+		delete cellClicks[
+			Object.keys(cellClicks)[Object.keys(cellClicks).length - 1]
+		];
 	} else if (e.target.textContent === "Reset") {
 		cells.map((e) => (e.value = ""));
 	} else if (e.target.textContent === "Solve") {
-			const createBoard = () => {
-				let CBboard = [];
-				let row = [];
-				for (let i = 0; i < 9; i++) {
-					row.push(0);
-				}
-				for (let i = 0; i < 9; i++) {
-					CBboard.push(row);
-				}
-				return CBboard;
-			};
 
-		const copyData = (CDboard) => {
-			CDboard = JSON.parse(JSON.stringify(CDboard))
-			cells.map((e) => {
-				coordinate = e.id.split("");
-				if (e.value) {
-					CDboard[coordinate[1] - 1][coordinate[2] - 1] = Number(
-						e.value
-					);
-				} else CDboard[coordinate[1] - 1][coordinate[2] - 1] = 0;
-			});
-			return CDboard
-		};
+		gameObject = JSON.parse(
+			JSON.stringify(makeGameObject(copyData(createBoard())))
+		);
+		solvedGameObject = solver(gameObject, [
+			strategyScanning,
+			stratergyExclusiveCells,
+			advancedScanning,
+		]);
 
-		gameObject = JSON.parse(JSON.stringify(makeGameObject(copyData(createBoard()))));
-	solvedGameObject = solver(gameObject, [
-	strategyScanning,
-	stratergyExclusiveCells,
-	advancedScanning,
-]);
-displaySolution()
-
+		displaySolution();
 	} else {
 		document.querySelector(
 			"#" +
@@ -724,12 +764,10 @@ displaySolution()
 let errorId = [];
 let errorValue = [];
 let cellClicks = {};
-let gameObject = {}
-let solvedGameObject
+let gameObject = {};
+let solvedGameObject;
 const cells = Array.from(document.querySelectorAll('[class^="cell"]'));
 cells.map((e) => e.addEventListener("input", inputHandler));
 cells.map((e) => e.addEventListener("click", newestCellHandler));
-
 const buttons = Array.from(document.querySelectorAll('[class$="button"]'));
 buttons.map((e) => e.addEventListener("click", buttonsHandler));
-

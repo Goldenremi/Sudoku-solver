@@ -105,7 +105,8 @@ body {
 	font-weight: bold;
 }
 
-.hide-error-message{
+.hide-error-message,
+.hide-cannot-solve{
 	display: none
 }
 
@@ -175,6 +176,13 @@ body {
 	html{
 		font-size: 60%;
 	}
+
+	.section__input-buttons button {
+	font-weight: bold;
+	padding: 0.1rem;
+	border-radius: 0.9rem;
+	height: 2rem;
+}
 }
 
 
