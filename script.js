@@ -1,7 +1,8 @@
-//Javascript Sudoku Solver
+// Javascript Sudoku Solver
 
 // Solving the board
 
+// Testing mode
 // const receiveInput = (RIboard) => {
 // 	for (let i = 0; i < 9; i++) {
 // 		let notCorrectLenght = true;
@@ -463,6 +464,53 @@ const advancedScanning = (ASgameObject) => {
 	return repeat(repeat(repeat(ASgameObject.boxes).rows).columns);
 };
 
+// const stratergyTunboTunbo = (STTgameBoard) => {
+// 	STTgameBoard = JSON.parse(JSON.stringify(STTgameBoard));
+// 	//or startergyGuessWork
+// 	let STTguessWorkBoardOld
+// 	let STTguessWorkBoardNew = [];
+// 	let i =0;
+// 	do {
+// 		console.log("guessing ",i);
+// 		i++
+// 		STTguessWorkBoardOld = JSON.parse(JSON.stringify(STTguessWorkBoardNew))
+
+// 		for (let i = 0; i < STTgameBoard.cells.length; i++) {
+// 			for (
+// 				let j = 0;
+// 				j < STTgameBoard.cells[i].possibleValues.length &&
+// 				STTgameBoard.cells[i].possibleValues.length !== 1;
+// 				j++
+// 			) {
+// 				STTguessWorkBoardNew = STTgameBoard = JSON.parse(
+// 					JSON.stringify(
+// 						solver(
+// 							JSON.parse(
+// 								JSON.stringify(
+// 									updater(
+// 										0,
+// 										STTgameBoard,
+// 										STTgameBoard.cells[i].usefulId,
+// 										STTgameBoard.cells[i].possibleValues[j],
+// 										undefined
+// 									)
+// 								)
+// 							),
+// 							[
+// 								strategyScanning,
+// 								stratergyExclusiveCells,
+// 								advancedScanning,
+// 							]
+// 						)
+// 					)
+// 				);
+// 			}
+// 		}
+// 	} while ( JSON.stringify(STTguessWorkBoardOld) !== JSON.stringify(STTguessWorkBoardNew) && i<2);
+
+// 	return STTguessWorkBoardNew;
+// };
+
 const updater = (UMode, UObject, UId, UValue, UArray) => {
 	UObject = JSON.parse(JSON.stringify(UObject));
 	if (UMode === 0) {
@@ -544,7 +592,22 @@ const updater = (UMode, UObject, UId, UValue, UArray) => {
 				}
 			}
 		} else {
+			console.log(UObject.cells[UId], UValue);
+			console.log("is a possible value", UpossibleValues.indexOf(UValue));
+			console.log(
+				"is a possible value in the row",
+				UObject.rows[Urow].valuesLeft.indexOf(UValue)
+			);
+			console.log(
+				"is a possible value in the column",
+				UObject.columns[Ucolumn].valuesLeft.indexOf(UValue)
+			);
+			console.log(
+				"is a possible value in the box",
+				UObject.boxes[Ubox].valuesLeft.indexOf(UValue)
+			);
 			console.log("Invalid Update", UId, UValue);
+			console.log(UObject);
 		}
 	} else if (UMode === 1) {
 		for (let i = 0; i < UArray.length; i++) {
@@ -566,7 +629,7 @@ const solver = (SObject, Stratergies) => {
 	let doneBoard_new = {};
 	let i = 0;
 	do {
-		//console.log("solving ", i);
+		// console.log("solving ", i);
 		i++;
 		doneBoard_old = JSON.parse(JSON.stringify(doneBoard_new));
 		doneBoard_new = SObject = Stratergies.reduce(
@@ -748,11 +811,20 @@ const buttonsHandler = (e) => {
 		gameObject = JSON.parse(
 			JSON.stringify(makeGameObject(copyData(createBoard())))
 		);
+
+		// solvedGameObject = stratergyTunboTunbo(
+		// 	solver(gameObject, [
+		// 		strategyScanning,
+		// 		stratergyExclusiveCells,
+		// 		advancedScanning,
+		// 	])
+		// );
+
 		solvedGameObject = solver(gameObject, [
 			strategyScanning,
 			stratergyExclusiveCells,
 			advancedScanning,
-		]);
+		])
 
 		displaySolution();
 	} else {
@@ -775,3 +847,9 @@ cells.map((e) => e.addEventListener("input", inputHandler));
 cells.map((e) => e.addEventListener("click", newestCellHandler));
 const buttons = Array.from(document.querySelectorAll('[class$="button"]'));
 buttons.map((e) => e.addEventListener("click", buttonsHandler));
+
+// let b = true
+// for (let i=0; i<9 && ;i++){
+// 	console.log('hi')
+// 	b = false
+// }
