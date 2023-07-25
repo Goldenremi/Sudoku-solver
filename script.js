@@ -856,7 +856,27 @@ let errorValue = [];
 let cellClicks = {};
 let gameObject = {};
 let solvedGameObject;
+
+let gameBox = document.querySelector(".section__game-box");
+for (let i = 11; i < 100; i++) {
+  i % 10
+    ? gameBox.insertAdjacentHTML(
+        "beforeend",
+        `<input type="text" id="c${i}" class="cell${i}" />`
+      )
+    : null;
+}
+
+let inputButtons = document.querySelector(".section__input-buttons");
+for (let i = 9; i > 0; i--) {
+  inputButtons.insertAdjacentHTML(
+    "afterbegin",
+    `<button id="input${i}" class="input-button">${i}</button>`
+  );
+}
+
 const cells = Array.from(document.querySelectorAll('[class^="cell"]'));
+
 cells.map((e) => e.addEventListener("input", inputHandler));
 cells.map((e) => e.addEventListener("click", newestCellHandler));
 cells.map((e) => e.addEventListener("keydown", movementHandler));
