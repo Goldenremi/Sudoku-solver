@@ -3,6 +3,8 @@
 // Solving the board
 
 // Testing mode functions
+const unique = (board) => JSON.parse(JSON.stringify(board));
+
 const receiveInput = (RIboard) => {
   for (let i = 0; i < 9; i++) {
     let notCorrectLenght = true;
@@ -247,7 +249,7 @@ const makeGameObject = (MGOboard) => {
 };
 
 const copyData = (CDgameBoard) => {
-  CDgameBoard = JSON.parse(JSON.stringify(CDgameBoard));
+  CDgameBoard = unique(CDgameBoard);
   cells.map((e) => {
     coordinate = e.id.split("");
     if (e.value) {
@@ -258,7 +260,7 @@ const copyData = (CDgameBoard) => {
 };
 
 const strategyScanning = (SSGameObject) => {
-  SSGameObject = JSON.parse(JSON.stringify(SSGameObject));
+  SSGameObject = unique(SSGameObject);
   for (let i = 0; i < 81; i++) {
     let row = SSGameObject.cells[i].row;
     let column = SSGameObject.cells[i].column;
@@ -306,9 +308,7 @@ const stratergyExclusiveCells = (SECGameObject) => {
         possibleValues = [...SECGameObject.cells[cellsId[k]].possibleValues];
         value = SECGameObject.cells[cellsId[k]].value;
         if (possibleValues.includes(i) && value === 0) {
-          inIt.push(
-            JSON.parse(JSON.stringify(SECGameObject.cells[cellsId[k]]))
-          );
+          inIt.push(unique(SECGameObject.cells[cellsId[k]]));
         }
       }
 
@@ -348,7 +348,7 @@ const advancedScanning = (ASgameObject) => {
 			})
 		})*/
 
-  ASgameObject = JSON.parse(JSON.stringify(ASgameObject));
+  ASgameObject = unique(ASgameObject);
   let cellsId;
   let possibleValues;
   let value;
@@ -363,9 +363,7 @@ const advancedScanning = (ASgameObject) => {
           possibleValues = [...ASgameObject.cells[cellsId[k]].possibleValues];
           value = ASgameObject.cells[cellsId[k]].value;
           if (possibleValues.includes(i) && value === 0) {
-            inIt.push(
-              JSON.parse(JSON.stringify(ASgameObject.cells[cellsId[k]]))
-            );
+            inIt.push(unique(ASgameObject.cells[cellsId[k]]));
           }
         }
 
@@ -406,7 +404,7 @@ const advancedScanning = (ASgameObject) => {
               }
             }
           };
-          let caseInit = JSON.parse(JSON.stringify(inIt));
+          let caseInit = unique(inIt);
           caseTwoInit = caseInit.filter((x) => x.possibleValues.length === 2);
           caseThreeInit = caseInit.filter((x) => x.possibleValues.length === 3);
           caseFourInit = caseInit.filter((x) => x.possibleValues.length === 4);
@@ -439,7 +437,7 @@ const advancedScanning = (ASgameObject) => {
 };
 
 // const stratergyTunboTunbo = (STTgameBoard) => {
-// 	STTgameBoard = JSON.parse(JSON.stringify(STTgameBoard));
+// 	STTgameBoard = unique(STTgameBoard));
 // 	//or startergyGuessWork
 // 	let STTguessWorkBoardOld
 // 	let STTguessWorkBoardNew = [];
@@ -447,7 +445,7 @@ const advancedScanning = (ASgameObject) => {
 // 	do {
 // 		console.log("guessing ",i);
 // 		i++
-// 		STTguessWorkBoardOld = JSON.parse(JSON.stringify(STTguessWorkBoardNew))
+// 		STTguessWorkBoardOld = unique(STTguessWorkBoardNew))
 
 // 		for (let i = 0; i < STTgameBoard.cells.length; i++) {
 // 			for (
@@ -486,7 +484,7 @@ const advancedScanning = (ASgameObject) => {
 // };
 
 const updater = (UMode, UObject, UId, UValue, UArray) => {
-  UObject = JSON.parse(JSON.stringify(UObject));
+  UObject = unique(UObject);
   if (UMode === 0) {
     let Urow = UObject.cells[UId].row;
     let Ucolumn = UObject.cells[UId].column;
@@ -598,11 +596,9 @@ const solver = (SObject, Stratergies) => {
   do {
     // console.log("solving ", i);
     i++;
-    doneBoard_old = JSON.parse(JSON.stringify(doneBoard_new));
-    doneBoard_new = SObject = Stratergies.reduce(
-      (acc, x) => JSON.parse(JSON.stringify(x(acc))),
-      JSON.parse(JSON.stringify(SObject))
-    );
+    doneBoard_old = unique(doneBoard_new);
+    (doneBoard_new = SObject = Stratergies.reduce((acc, x) => unique(x(acc)))),
+      unique(SObject);
   } while (
     JSON.stringify(doneBoard_old) !== JSON.stringify(doneBoard_new) &&
     i < 100
@@ -612,7 +608,7 @@ const solver = (SObject, Stratergies) => {
 };
 
 const displaySolution = () => {
-  DSgameObject = JSON.parse(JSON.stringify(solvedGameObject));
+  DSgameObject = unique(solvedGameObject);
   for (let i = 0; i < 81; i++) {
     if (DSgameObject.cells[i].value) {
       id = "#c" + DSgameObject.cells[i].id;
@@ -658,7 +654,7 @@ const inputHandler = (e) => {
   const verification = (Vvalue) => {
     // console.log(makeGameObject(copyData(createBoard())))
     //ateempt to make 1&1 in same row throw error
-    // let errorObject = JSON.parse(JSON.stringify(copyData(createBoard)))
+    // let errorObject = unique(copyData(createBoard))
     let trimmedValue = Vvalue.trim();
     if (false) {
     } else if (isNaN(trimmedValue)) {
